@@ -18,7 +18,7 @@ class GitHubTokenScanner:
         self.gh = Github(GITHUB_TOKENS[0]) if GITHUB_TOKENS else None
         self.current_repo = 0
         self.found_count = 0
-        self.output_file = "found_tokens.json"  # Файл для сохранения результатов
+        self.output_file = "found_tokens.json"  
 
     def _setup_logging(self):
         logging.basicConfig(
@@ -51,7 +51,7 @@ class GitHubTokenScanner:
                     self.found_count += 1
                     found_tokens.update(tokens)
                     status = "✅ Найдено токенов: " + ", ".join(t[:10] + "..." for t in tokens)
-                    self._save_tokens(tokens, repo.full_name)  # Сохраняем токены сразу при обнаружении
+                    self._save_tokens(tokens, repo.full_name)  
                 else:
                     status = "❌ Токены не найдены"
                 
@@ -62,7 +62,7 @@ class GitHubTokenScanner:
             self.logger.error(f"Ошибка при сканировании: {str(e)}")
             print(f"\n⚠️ Произошла ошибка: {str(e)}")
 
-        self._save_final_results(found_tokens)  # Финальное сохранение всех токенов
+        self._save_final_results(found_tokens)  
         return found_tokens
 
     def _scan_repository(self, repo):
@@ -89,13 +89,13 @@ class GitHubTokenScanner:
         try:
             data = []
             try:
-                # Читаем существующие данные
+    
                 with open(self.output_file, 'r') as f:
                     data = json.load(f)
             except (FileNotFoundError, json.JSONDecodeError):
                 pass
             
-            # Добавляем новые токены
+         
             for token in tokens:
                 data.append({
                     "token": token,
@@ -103,7 +103,7 @@ class GitHubTokenScanner:
                     "timestamp": datetime.now().isoformat()
                 })
             
-            # Сохраняем обновленные данные
+    
             with open(self.output_file, 'w') as f:
                 json.dump(data, f, indent=2, ensure_ascii=False)
                 
@@ -124,7 +124,7 @@ class GitHubTokenScanner:
                     "scan_date": datetime.now().isoformat(),
                     "search_query": SEARCH_SETTINGS["query"]
                 },
-                "tokens": list(tokens)  # Преобразуем set в list для JSON
+                "tokens": list(tokens)  
             }
             
             with open(self.output_file, 'w') as f:
@@ -151,7 +151,7 @@ if __name__ == "__main__":
     
     if tokens:
         print("\nПоследние обнаруженные токены:")
-        for i, token in enumerate(list(tokens)[-5:], 1):  # Показываем только последние 5
-            print(f"{i}. {token[:15]}...")  # Показываем только часть токена для безопасности
+        for i, token in enumerate(list(tokens)[-5:], 1): 
+            print(f"{i}. {token[:15]}...")  
     else:
         print("\nТокены не обнаружены")
